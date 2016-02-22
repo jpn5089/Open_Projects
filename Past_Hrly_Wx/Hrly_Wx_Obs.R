@@ -4,19 +4,10 @@ library(sp)
 library(fields)
 library(MBA)
 
+# reference doc: http://blue.for.msu.edu/lab-notes/NOAA_0.1-1/NOAA-ws-data.pdf
+
 file <- "ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-history.csv"
 options(download.file.method="libcurl")
-#repeat {
-#  try(download.file(file, "C:/Users/jnicola/Desktop/R/isd-history.csv",
-#                    quiet = TRUE))
-#  if (file.info("C:/Users/jnicola/Desktop/R/isd-history.csv")$size >
-#      0) {
-#      break
-#  }
-#}
-
-#st <- read.csv("data/isd-history.csv")
-
 
 download.file(file, "C:/Users/jnicola/Desktop/isd-history.csv",quiet = TRUE)
 st <- read.csv("C:/Users/jnicola/Desktop/R/isd-history.csv")
@@ -51,7 +42,3 @@ for (y in 2000:2016) {
 head(pa.list)
 head(outputs)
 
-#wget <- paste("wget -P C:/Users/jnicola/Desktop/R ftp://ftp.ncdc.noaa.gov/pub/data/noaa/", y, "/", outputs[s, 1], sep = "")
-#outputs[s, 2] <- try(system2(wget))
-
-#system("gunzip -r ")
