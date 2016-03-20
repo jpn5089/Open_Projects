@@ -55,3 +55,5 @@ for (y in 2014:2016) {
 
 g <- gunzip("~/GitHub/Open_Projects/Past_Hrly_Wx/Data/ES_PT_Wx/1-080020-99999-2015.gz")
 data <- read.table(gzfile(paste(getwd(), "~/GitHub/Open_Projects/Past_Hrly_Wx/Data/ES_PT_Wx/1-080020-99999-2015", sep = ""), open = "rt"), sep = "", header = FALSE, skip =1, colClasses = classes)
+
+lo
