@@ -8,6 +8,7 @@ library(scales)
 library(rnoaa)
 options(noaakey = "gOTjkNrzDlVAafWzJyICPLKaWmwXpMoL")
 
+
 out <- ncdc(datasetid = "GHCND", stationid = "GHCND:USW00094823", datatypeid = c("TMAX", "TMIN"),
             startdate = "2015-01-01", enddate = "2015-12-31", limit = 1000)
 
