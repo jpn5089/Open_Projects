@@ -10,8 +10,18 @@ options(noaakey = "gOTjkNrzDlVAafWzJyICPLKaWmwXpMoL")
 
 
 out <- ncdc(datasetid = "GHCND", stationid = "GHCND:USW00094823", datatypeid = c("TMAX", "TMIN"),
-            startdate = "2015-01-01", enddate = "2015-12-31", limit = 1000)
+            startdate = "2016-01-01", enddate = "2016-12-31", limit = 1000)
 
+normals_out <- ncdc(datasetid='NORMAL_DLY', stationid='GHCND:USW00094823', datatypeid = c("DLY-TMAX-NORMAL", "DLY-TMIN-NORMAL"),
+            startdate = '2010-01-01', enddate = '2010-12-31', limit = 1000)
+
+normals_stuff <- normals_out$data %>%
+  mutate(date = ymd_hms(gsub("T"," ",date)) + years(6),
+         value = (value/10) ) %>%
+  select(date,datatype,value) %>%
+  mutate(value = as.numeric(value))%>%
+  mutate(month = month(date))        
+                    
 stuff <- out$data %>%
   mutate(date = ymd_hms(gsub("T"," ",date)),
          value = (value/10) ) %>%
@@ -19,15 +29,16 @@ stuff <- out$data %>%
   mutate(value = as.numeric(value))%>%
   mutate(month = month(date)) 
 
-write.csv(stuff, "C:/Users/John/Desktop/Pitt_2015.csv")
+write.csv(stuff, "C:/Users/John/Desktop/Pitt_2016_edits.csv")
+#write.csv(normals_stuff, "C:/Users/John/Desktop/PittNormals_2016.csv")
 
-ready_2015 <- read.csv("C:/Users/John/Desktop/R/PIT_2015.csv") %>%
+ready <- read.csv("C:/Users/John/Desktop/R/Pitt_2016.csv") %>%
   mutate(date = as.Date(mdy(date))) %>%
   mutate(month = month(date)) 
 
-temp_labs <- data_frame(x=c(rep(as.Date("2015-04-01"), 2),
-                            rep(as.Date("2015-10-01"), 3),
-                            rep(as.Date("2015-07-01"), 1)),
+temp_labs <- data_frame(x=c(rep(as.Date("2016-04-01"), 2),
+                            rep(as.Date("2016-10-01"), 3),
+                            rep(as.Date("2016-07-01"), 1)),
                         y=c(rep(seq(0, 80, by=80), 1),
                             rep(seq(0, 80, by=40), 1),
                             32),
@@ -38,7 +49,7 @@ temp_labs <- data_frame(x=c(rep(as.Date("2015-04-01"), 2),
 gg <- ggplot()
 gg <- gg + geom_label(data=temp_labs, aes(x=x, y=y, label=label),
                       size=2.5, label.size=0)
-gg <- gg + geom_linerange(data=ready_2015,
+gg <- gg + geom_linerange(data=ready,
                           aes(x=date, ymin=TMINF,
                               ymax=TMAXF,
                               color=TMEANF),
@@ -48,7 +59,7 @@ gg <- gg + scale_y_continuous(expand=c(0,0), limits=c(-20, 100),
                               labels=c(seq(-20, 100, by=20),32))
 gg <- gg + scale_colour_gradient(low = "black", high = "gold")
 gg <- gg + scale_x_date(labels = date_format("%b"), breaks = date_breaks("month"))
-gg <- gg + labs(x=NULL, y=NULL, title= "2015 Daily Temperatures - Pittsburgh", subtitle=NULL)
+gg <- gg + labs(x=NULL, y=NULL, title= "2016 Daily Temperatures - Pittsburgh", subtitle=NULL)
 gg <- gg + coord_polar()
 gg <- gg + theme(panel.grid.major=element_line())
 gg <- gg + theme(panel.grid.major.x=element_blank())
@@ -66,4 +77,4 @@ gg <- gg + theme(legend.position="none")
 
 suppressWarnings(print(gg))
 
-ggsave(gg, file = "C:/Users/John/Desktop/PITtemps.jpeg", width = 7, height = 7)
+ggsave(gg, file = "C:/Users/John/Desktop/PIT_2016_temps.jpeg", width = 7, height = 7)
